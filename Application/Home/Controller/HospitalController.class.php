@@ -8,9 +8,7 @@ class HospitalController extends BaseController{
     public function index(){
         $hid = session('admin')['hid'];
         if($hid == 0){
-            $data = M('hospital')->alias('a')
-                ->join("LEFT JOIN __SYS_USER__ b ON a.id = b.hid and b.type = 1")
-                ->field("a.*,b.id as uid")
+            $data = M('hospital')
                 ->order('id desc')
                 ->select();
         }
@@ -26,13 +24,19 @@ class HospitalController extends BaseController{
     }
 
     public function add_do(){
-        $data = $_POST;
+        $data = I('post.');
         $result = M('hospital')->add($data);
+        
         if ($result) {
-            unset($data);
-            $data['info'] = 'success';
-            $data['status'] = 0;
-            $this->ajaxReturn($data);
+            $data['hid'] = $result;
+            $res = M('hospital_ext')->add($data);
+            if ($res) {
+                unset($data);
+                $data['info'] = 'success';
+                $data['status'] = 0;
+                $this->ajaxReturn($data);
+            }
+            
         } else {
             $data['info'] = 'fail';
             $data['status'] = 1;
@@ -44,7 +48,9 @@ class HospitalController extends BaseController{
     //微信菜单修改
     public function edit(){
         $id = I('id');
-        $data = M('hospital') -> where (array('id' => $id)) -> find();
+        $data = M('hospital')->alias('a')
+        ->join("LEFT JOIN __HOSPITAL_EXT__ c ON a.id=c.hid")
+        -> where (array('a.id' => $id)) -> find();
         $this->data = $data;
         $this->display();
     }
@@ -54,6 +60,7 @@ class HospitalController extends BaseController{
         $result = M('hospital')->save($data);
 
         if ($result) {
+            M('hospital_ext')->where(array('hid'=>$data['id']))->save($data);
             unset($data);
             $data['info'] = 'success';
             $data['status'] = 0;
@@ -427,10 +434,10 @@ class HospitalController extends BaseController{
     //医院简介
     public function description(){
         $hid = session('admin')['hid'];
-        $data = M('hos_description') -> where(array('hid'=>$hid)) ->find();
+        $data = M(session('mydbname') . '.' . 'info_hospital') -> where(array('id'=>$hid)) ->find();
         $data['content'] = htmlspecialchars_decode($data['content']);
         $this->data = $data;
-        $this->hid = $hid;
+        $this->id = $data['id'];
         $this->display();
     }
 
@@ -438,9 +445,10 @@ class HospitalController extends BaseController{
     public function get_des(){
         $data = I('post.');
         if(empty($data['id'])){
-            $res = M('hos_description') -> add($data);
+            $data['id'] = session('admin')['hid'];
+            $res = M(session('mydbname') . '.' . 'info_hospital') -> add($data);
         }else{
-            $res = M('hos_description')-> save($data);
+            $res = M(session('mydbname') . '.' . 'info_hospital')-> save($data);
         }
         
         if($res !== false){

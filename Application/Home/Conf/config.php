@@ -15,6 +15,4 @@ return array(
     'DB_PWD' => 'root',										//密码
     'DB_PORT' => '3306',									//端口
     'DB_PREFIX' => 'sl_',									//表前缀
-
-    'SHOW_PAGE_TRACE' =>true,
 );

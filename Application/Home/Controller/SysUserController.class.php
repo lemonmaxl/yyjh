@@ -82,9 +82,9 @@ class SysUserController extends BaseController
     public function change()
     {
         $data['id'] = I('id');
-        $tmpdata = M('user')->where($data)->find();
+        $tmpdata = M('sys_user')->where($data)->find();
         $tmpdata['password'] = sha1(md5('123456'));
-        $result = M('user')->where($data)->save($tmpdata);
+        $result = M('sys_user')->where($data)->save($tmpdata);
 
         if ($result !== false) {
             $data['info'] = 'success';
@@ -103,7 +103,7 @@ class SysUserController extends BaseController
         $where['id'] = I('id');
 
         $fundata = M('sys_role') ->alias('a')
-            ->join('LEFT JOIN __USER_ROLE__ b ON a.id=b.rid and b.uid ='.I('id'))
+            ->join('LEFT JOIN __SYS_ROLE__ b ON a.id=b.rid and b.uid ='.I('id'))
             ->field('a.*,b.uid')
             ->where(array('a.hid' => $hid,'a.mstatus' => 0 ))
             ->select();
@@ -166,8 +166,9 @@ class SysUserController extends BaseController
     public function del()
     {
         $data['id'] = I('id');
-        $result = M('user')->where($data)->delete();
+        $result = M('sys_user')->where($data)->delete();
         if ($result !== false) {
+            M('sys_user_ext')->where(array('uid'=>$data['id']))->delete();
             $data['info'] = 'success';
             $data['status'] = 0;
             $this->ajaxReturn($data);
@@ -204,23 +205,24 @@ class SysUserController extends BaseController
     {
         $map['username'] = array('EQ', I('username'));
         $map['id'] = array('NEQ', I('id'));
-        $selectdata = M('user')->where($map)->select();
+        $selectdata = M('sys_user')->where($map)->select();
         if (!empty($selectdata)) {
             $data['info'] = '用户名重复，不能编辑数据';
-            $data['status'] = 1;
+            $data['status'] = 2;
             $this->ajaxReturn($data);
         }
         $mydata = $_POST;
-        $result = M('user')->save($mydata);
-//        if ($result !== false) {
+        $result = M('sys_user')->save($mydata);
+        $result1 = M('sys_user_ext')->where(array('uid'=>$_POST['id']))->save($mydata);
+        if (($result !== false) && ($result1 !== false)) {
             $data['info'] = 'success';
             $data['status'] = 0;
             $this->ajaxReturn($data);
-//        } else {
-//            $data['info'] = 'fail';
-//            $data['status'] = 1;
-//            $this->ajaxReturn($data);
-//        }
+       } else {
+           $data['info'] = 'fail';
+           $data['status'] = 1;
+           $this->ajaxReturn($data);
+       }
     }
 
     public function add()

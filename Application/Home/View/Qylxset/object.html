@@ -1,0 +1,194 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="http://lib.h-ui.net/html5.js"></script>
+    <script type="text/javascript" src="http://lib.h-ui.net/respond.min.js"></script>
+    <script type="text/javascript" src="http://lib.h-ui.net/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/h-ui.admin/css/style.css" />
+    <script type="text/javascript" src="__PUBLIC__lib/My97DatePicker/WdatePicker.js"></script>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>添加</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body>
+<form class="form form-horizontal" id="form-admin-add">
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l"><a href="javascript:;" onclick="admin_add('添加','{:U('Qylxset/object_add')}',{$id},'1100','600')"
+                               class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加 </a></span>
+        <span class="r">共有数据：<strong>{$datacount}</strong> 条</span>
+    </div>
+    <input type="hidden" name="id" id="id" value="{$id}">
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+        <tr class="text-c">
+            
+            <th >分类</th>
+            <th >服务项目</th>
+            <th >收费标准</th>
+            <th >签约收费</th>
+            <th width="100">数量</th>
+            <th >承接人</th>
+            <th >操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name='dataList' id='vo'>
+            <tr class="text-c">
+                <input type="hidden" value="{$vo.id}" name="xmid[]" checked>
+                <td>{$vo.mc}</td>
+                <td>{$vo.xm}</td>
+                <td>{$vo.sfbz}</td>
+                <td>{$vo.qysf}</td>
+                <td><div  class="buy-num-bar buy-num clearfix">
+                        <a class="btn-dec" href="javascript:;">[<i class="Hui-iconfont" style="color: #2929D6;">&#xe6a1;</i>]</a>
+                        <input  name="num_{$vo.id}" id="num_{$vo.id}" value="{$vo.buynum}" size="4" maxlength='5' style="text-align:center;">
+                        <a class="btn-add" href="javascript:;">[<i class="Hui-iconfont" style="color: #2929D6;">&#xe600;</i>]</a>
+                    </div>
+                </td>
+                <td>{$vo.cjr}</td>
+                <td><a title="删除" href="javascript:;"
+                       onclick="admin_del(this,{$vo.id})" class="ml-5"
+                       style="text-decoration:none">删除</a>
+                   </td>
+            </tr>
+        </volist>
+        </tbody>
+
+    </table>
+
+    <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+            <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+        </div>
+    </div>
+</div>
+</form>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__PUBLIC__lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="__PUBLIC__static/h-ui.admin/js/H-ui.admin.js"></script>
+
+<script type="text/javascript" src="http://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript" src="__PUBLIC__lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__PUBLIC__lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<!--/_footer /作为公共模版分离出去-->
+
+<script type="text/javascript">
+    $(function () {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-admin-add").validate({
+            rules: {
+                
+            },
+            onkeyup: false,
+            focusCleanup: true,
+//            success: "valid",
+            submitHandler: function (form) {
+                $('#form-admin-add').ajaxSubmit({
+                    type: 'post', // 提交方式 get/post
+                    url: "{:U('Qylxset/object_do')}", // 需要提交的 url
+                    data: {
+                        
+                    },
+                    success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
+                        // 此处可对 data 作相关处理
+                        //alert(JSON.stringify(data));
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(index);
+                    }
+
+                });
+            }
+        });
+
+        $(".btn-dec").on("click",function(){
+            var parent = $(this).parent().parent();
+            var inpNum = parent.find("input");
+            var num = parent.find("input").val();
+            var tr = parent.parent();
+            if(num>1) num--;
+            else num=1;
+            parent.find("input").val(num);
+            
+
+        });
+        // 增加
+        $(".btn-add").on("click",function(){
+            var parent = $(this).parent().parent();
+            var inpNum = parent.find("input");
+            var num = parent.find("input").val();
+            var tr = parent.parent();
+            num++;
+            parent.find("input").val(num);
+            
+        });
+        //  直接输入
+        $(".buy-num-bar input").on("change",function(){
+            var num = parseInt($(this).val());
+            if(num < 1 ){
+                alert("数量最少为1");
+                $(this).val(1);
+            }
+        });
+    });
+    function admin_add(title, url,id, w, h) {
+        var str = url;
+        str = url + '?id='+id;
+        layer_show(title, str, w, h);
+    }
+ function admin_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            //此处请求后台程序，下方是成功后的前台处理……
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: "{:U('Qylxset/object_del')}", // 需要提交的 url
+                data: {
+                    'id': id
+                },
+                success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!', {icon: 1, time: 1000});
+                }
+            });
+//            $(obj).parents("tr").remove();
+//            layer.msg('已删除!', {icon: 1, time: 1000});
+        });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

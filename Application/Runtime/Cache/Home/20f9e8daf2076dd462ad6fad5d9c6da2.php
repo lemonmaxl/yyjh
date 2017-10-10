@@ -86,6 +86,8 @@
 <script type="text/javascript" src="/Public/static/h-ui/js/H-ui.js"></script>
 <script type="text/javascript" src="/Public/static/h-ui.admin/js/H-ui.admin.js"></script>
 
+
+
 <script type="text/javascript" src="http://malsup.github.io/jquery.form.js"></script>
 <script type="text/javascript" src="/Public/lib/icheck/jquery.icheck.min.js"></script>
 <script type="text/javascript" src="/Public/lib/jquery.validation/1.14.0/jquery.validate.js"></script>

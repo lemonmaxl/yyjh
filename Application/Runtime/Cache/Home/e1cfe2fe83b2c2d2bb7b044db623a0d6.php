@@ -29,6 +29,7 @@
 <title>编辑用户</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
+<style>.error{color: red}</style>
 </head>
 <body>
 <article class="page-container">
@@ -87,18 +88,18 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>状态：</label>
 			<div class="formControls col-xs-7 col-sm-8 skin-minimal">
 				<div class="radio-box">
-					<input name="mstaus" type="radio" value="0" class="mstaus" <?php if($data['mstatus'] == 0): ?>checked<?php endif; ?> >
-					<label for="sex-1">启用</label>
+					<input name="mstatus" type="radio" value="0" class="mstatus" <?php if($data['mstatus'] == 0): ?>checked<?php endif; ?> >
+					<label for="mstatus-1">启用</label>
 				</div>
 				<div class="radio-box">
-					<input name="mstaus" type="radio" value="1" class="mstaus" <?php if($data['mstatus'] == 1): ?>checked<?php endif; ?> >
-					<label for="sex-2">禁用</label>
+					<input name="mstatus" type="radio" value="1" class="mstatus" <?php if($data['mstatus'] == 1): ?>checked<?php endif; ?> >
+					<label for="mstatus-2">禁用</label>
 				</div>
 			</div>
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<input type="hidden" class="hidden" value="<?php echo ($data["id"]); ?>" />
+				<input type="hidden" name="id" class="hidden" value="<?php echo ($data["id"]); ?>" />
 				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 			</div>
 		</div>
@@ -128,11 +129,25 @@ $(function(){
 	});
 	
 	$("#form-member-add").validate({
+		errorPlacement: function(error, element) {
+            //console.log(element.parent().children("div"));
+            $( element ).closest( "div" ).append( error );
+        }, 
+        errorElement: "div",
+        errorClass:"error",
 		rules:{
 			username:{
 				required:true,
 				minlength:6,
 				maxlength:16
+			},
+			password:{
+				required:true,
+				minlength:6,
+				maxlength:16
+			},
+			truename:{
+				required:true,
 			},
 
 		},
@@ -144,17 +159,18 @@ $(function(){
 				type: 'post', // 提交方式 get/post
 				url: "<?php echo U('SysUser/edit_do');?>", // 需要提交的 url
 				data: {
-					'username' : $('#username').val(),
-					'truename' : $('#truename').val(),
-					'mstaus' : $('.mstaus:checked').val(),
-					'id' : $('.hidden').val(),
 				},
 				success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
 					// 此处可对 data 作相关处理
-					var index = parent.layer.getFrameIndex(window.name);
-					parent.$('.btn-refresh').click();
-					parent.location.reload();
-					parent.layer.close(index);
+					if (data.status == 2) {
+						layer.msg(data.info, {icon: 5, time: 2000});
+					}else if(data.status == 0){
+						
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.$('.btn-refresh').click();
+						parent.location.reload();
+						parent.layer.close(index);
+					}
 				}
 			});
 		}

@@ -89,11 +89,11 @@
 			<div class="formControls col-xs-7 col-sm-8 skin-minimal">
 				<div class="radio-box">
 					<input name="mstatus" type="radio" value="0" class="mstatus" <if condition="$data['mstatus'] eq 0">checked</if> >
-					<label for="sex-1">启用</label>
+					<label for="mstatus-1">启用</label>
 				</div>
 				<div class="radio-box">
 					<input name="mstatus" type="radio" value="1" class="mstatus" <if condition="$data['mstatus'] eq 1">checked</if> >
-					<label for="sex-2">禁用</label>
+					<label for="mstatus-2">禁用</label>
 				</div>
 			</div>
 		</div>
@@ -162,10 +162,15 @@ $(function(){
 				},
 				success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
 					// 此处可对 data 作相关处理
-					var index = parent.layer.getFrameIndex(window.name);
-					parent.$('.btn-refresh').click();
-					parent.location.reload();
-					parent.layer.close(index);
+					if (data.status == 2) {
+						layer.msg(data.info, {icon: 5, time: 2000});
+					}else if(data.status == 0){
+						
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.$('.btn-refresh').click();
+						parent.location.reload();
+						parent.layer.close(index);
+					}
 				}
 			});
 		}
